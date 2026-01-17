@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codewords | {{ game.code }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body class="page game">
+    <main class="container">
+      <header class="game-header">
+        <div>
+          <div class="hero-badge">Room {{ game.code }}</div>
+          <h1>Codewords</h1>
+          {% if player %}
+            <p class="subtitle">
+              Player: <strong>{{ player.name }}</strong>
+              {% if game.mode == "solo" %}
+                <span class="pill neutral">solo</span>
+                {% if player.is_host %}
+                  <span class="pill host">host</span>
+                {% endif %}
+              {% else %}
+                {% if player.team %}
+                  <span class="pill {{ player.team }}">{{ player.team }}</span>
+                {% else %}
+                  <span class="pill neutral">unassigned</span>
+                {% endif %}
+                {% if player.is_host %}
+                  <span class="pill host">host</span>
+                {% endif %}
+              {% endif %}
+            </p>
+          {% endif %}
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Share this code</div>
+          <div class="meta-code">{{ game.code }}</div>
+        </div>
+      </header>
+
+      {% if not player %}
+        <div class="notice">
+          Unknown player. Go back and join the room with your name.
+        </div>
+      {% else %}
+        <div
+          id="game-root"
+          data-code="{{ game.code }}"
+          data-player-id="{{ player_id }}"
+          data-is-host="{{ 'true' if player.is_host else 'false' }}"
+        >
+          <div class="layout">
+            <section class="board-panel">
+              <div id="board" class="board"></div>
+            </section>
+
+            <aside class="side-stack">
+              <section class="panel stack info-panel">
+              <div class="panel-row">
+                <div>
+                  <h2>Round status</h2>
+                  <p id="status" class="muted status-line">
+                    Waiting for the host.
+                  </p>
+                </div>
+                <div class="scoreboard">
+                  <div class="score red">
+                    <span>Red remaining</span>
+                    <strong id="score-red">-</strong>
+                  </div>
+                  <div class="score blue">
+                    <span>Blue remaining</span>
+                    <strong id="score-blue">-</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-row">
+                <div class="clue-card">
+                  <div class="clue-label">AI clue</div>
+                  <div id="clue" class="clue-value">No clue yet</div>
+                  <div class="clue-meta">
+                    <div id="turn" class="clue-turn turn-pill">Turn: -</div>
+                    <div class="clue-timer">
+                      Time left <strong id="timer">--:--</strong>
+                    </div>
+                    <div class="clue-guesses">
+                      Guesses left <strong id="guesses">--</strong>
+                    </div>
+                    <div id="targets-wrap" class="clue-targets is-hidden">
+                      Targets left <strong id="targets">--</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="controls">
+                  <button id="start-btn" class="primary">Start game</button>
+                  <button id="end-btn">End turn</button>
+                </div>
+              </div>
+              </section>
+
+              <section class="panel players-panel">
+                <h2>Players</h2>
+                <div id="players" class="players"></div>
+              </section>
+            </aside>
+          </div>
+        </div>
+      {% endif %}
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>

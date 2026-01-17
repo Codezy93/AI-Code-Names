@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codewords</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body class="page home">
+    <main class="container">
+      <header class="hero">
+        <div class="hero-badge">Codewords</div>
+        <h1>Two teams. One grid. AI clues.</h1>
+        <p>
+          Create a room, share the code, and let the AI clue-givers guide your
+          team to victory.
+        </p>
+      </header>
+
+      {% if message %}
+        <div class="notice">{{ message }}</div>
+      {% endif %}
+
+      <section class="cards">
+        <div class="card-panel">
+          <h2>Create game</h2>
+          <form method="post" action="{{ url_for('create') }}" class="stack">
+            <label>
+              Host name
+              <input
+                type="text"
+                name="name"
+                placeholder="Captain Nova"
+                required
+              />
+            </label>
+            <label>
+              Mode
+              <select name="mode">
+                <option value="team" selected>Team (2+ players)</option>
+                <option value="solo">Solo (AI cluegiver)</option>
+              </select>
+            </label>
+            <button type="submit" class="primary">Create room</button>
+          </form>
+        </div>
+
+        <div class="card-panel">
+          <h2>Join game</h2>
+          <form method="post" action="{{ url_for('join') }}" class="stack">
+            <label>
+              Game code
+              <input
+                type="text"
+                name="code"
+                placeholder="ABCD"
+                maxlength="6"
+                required
+              />
+            </label>
+            <label>
+              Player name
+              <input
+                type="text"
+                name="name"
+                placeholder="Agent Slate"
+                required
+              />
+            </label>
+            <button type="submit" class="primary">Join room</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="rules">
+        <h3>How it works</h3>
+        <ul>
+          <li>Players join with a room code and get split into two teams.</li>
+          <li>AI clue-givers suggest a single word and a count.</li>
+          <li>Teams tap words to reveal their colors and score points.</li>
+          <li>Reveal the black card and your team loses instantly.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
